@@ -22,10 +22,17 @@ const updateTask = async (taskId, userId, updateData) => {
     { $set: updateData },
   );
 };
+const handleCompleteTask = async (taskId, userId, completed) => {
+  return await taskModel.findOneAndUpdate(
+    { _id: taskId, user: userId },
+    { $set: completed },
+  );
+};
 module.exports = {
   createTask,
   getTasks,
   deleteTask,
+  handleCompleteTask,
   updateTask,
   getLatestTasks,
 };

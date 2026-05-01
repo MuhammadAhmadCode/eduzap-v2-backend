@@ -12,7 +12,7 @@ router.patch("/updatetask/:id", authMiddleware, taskController.updateTask);
 router.patch(
   "/updateTaskCompleted/:id",
   authMiddleware,
-  taskController.handleCompleteTak,
+  taskController.handleCompleteTask,
 );
 
 module.exports = router;

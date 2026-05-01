@@ -73,14 +73,17 @@ async function updateTask(req, res) {
   }
 }
 
-async function handleCompleteTak(req, res) {
-  const id = req.params.id;
-  const completed = req.body.completed;
-  await taskModel.findOneAndUpdate(
-    { _id: id, user: req.user._id },
-    { completed: completed },
-  );
-  res.status(200).json({ message: "updated successfully!" });
+async function handleCompleteTask(req, res) {
+  try {
+    const id = req.params.id;
+    const completed = req.body.completed;
+    const updatedTask = taskService.handleCompleteTask(id, req.user._id, {
+      completed: completed,
+    });
+    res.status(200).json({ message: "Updated Success", task: updatedTask });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to Update", error: error });
+  }
 }
 
 module.exports = {
@@ -89,5 +92,5 @@ module.exports = {
   getlatestTasks,
   deleteTask,
   updateTask,
-  handleCompleteTak,
+  handleCompleteTask,
 };

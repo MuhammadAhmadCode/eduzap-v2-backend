@@ -14,5 +14,6 @@ router.patch(
   authMiddleware,
   taskController.handleCompleteTask,
 );
+router.get("/stats", authMiddleware, taskController.getStats);
 
 module.exports = router;

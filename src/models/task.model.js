@@ -23,6 +23,9 @@ const taskSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
     },
+    completedAt: {
+      type: Date,
+    },
   },
   { timestamps: true },
 );

@@ -89,6 +89,16 @@ async function handleCompleteTask(req, res) {
     res.status(500).json({ message: "Failed to Update", error: error });
   }
 }
+async function getStats(req, res) {
+  try {
+    const stats = await taskService.getStats(req.user._id);
+    res.status(200).json({ success: true, data: stats });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to get stats", error: error });
+  }
+}
 
 module.exports = {
   CreateTask,
@@ -97,4 +107,5 @@ module.exports = {
   deleteTask,
   updateTask,
   handleCompleteTask,
+  getStats,
 };

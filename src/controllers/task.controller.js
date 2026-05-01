@@ -3,12 +3,14 @@ const taskService = require("../services/task.service");
 
 async function CreateTask(req, res) {
   try {
-    const { title, completed } = req.body;
+    const { title, completed, deadline, priority } = req.body;
 
     const newTask = await taskService.createTask(
       {
         title,
         completed,
+        deadline,
+        priority,
       },
       req.user._id,
     );
@@ -16,6 +18,8 @@ async function CreateTask(req, res) {
       message: "task Created",
       task: newTask.title,
       completed: newTask.completed,
+      priority: newTask.priority,
+      deadline: newTask.deadline || "",
     });
   } catch (error) {
     res.status(500).json({ message: "Failed to create task", error: error });

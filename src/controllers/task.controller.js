@@ -1,49 +1,76 @@
 const taskModel = require("../models/task.model");
+const taskService = require("../services/task.service");
 
 async function CreateTask(req, res) {
-  const { title, completed } = req.body;
+  try {
+    const { title, completed } = req.body;
 
-  await taskModel.create({
-    title,
-    completed,
-    user: req.user._id,
-  });
-  res.status(201).json({
-    message: "task Created",
-    task: title,
-    completed,
-  });
+    const newTask = await taskService.createTask(
+      {
+        title,
+        completed,
+      },
+      req.user._id,
+    );
+    res.status(201).json({
+      message: "task Created",
+      task: newTask.title,
+      completed: newTask.completed,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to create task", error: error });
+  }
 }
 
 async function getTasks(req, res) {
-  const tasks = await taskModel.find({ user: req.user._id });
-  res.status(200).json({ message: "fetched", tasks: tasks });
+  try {
+    const tasks = await taskService.getTasks(req.user._id);
+    res.status(200).json({ message: "fetched", tasks: tasks });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get tasks", error: error });
+  }
 }
 
 async function deleteTask(req, res) {
   try {
     const id = req.params.id;
-    const task = await taskModel.findOneAndDelete({
-      _id: id,
-      user: req.user._id,
-    });
+    const task = await taskService.deleteTask(id, req.user._id);
     res.status(200).json({
       message: "Task Deleted successfully!",
-      task: task,
+      task: task.title || "Task not found",
     });
   } catch (err) {
-    res.json({ message: "error", err });
+    res.json({ message: "failed to delete task", error: err });
+  }
+}
+async function getlatestTasks(req, res) {
+  try {
+    const tasks = await taskService.getLatestTasks(req.user._id);
+    res.json({ latestTasks: tasks });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to get latest tasks", error: error });
   }
 }
 
 async function updateTask(req, res) {
-  const title = req.body.edit;
-  const id = req.params.id;
-  const task = await taskModel.findOneAndUpdate(
-    { _id: id, user: req.user._id },
-    { title: title },
-  );
-  res.status(200).json({ message: "updated successfully!", task: title });
+  try {
+    const id = req.params.id;
+    const userId = req.user._id;
+    const updatedTitle = req.body.edit;
+    const updated = await taskService.updateTask(id, userId, {
+      title: updatedTitle,
+    });
+
+    if (!updated) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.status(200).json({ message: "updated successfully!", task: updated });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update task", error: error });
+  }
 }
 
 async function handleCompleteTak(req, res) {
@@ -59,6 +86,7 @@ async function handleCompleteTak(req, res) {
 module.exports = {
   CreateTask,
   getTasks,
+  getlatestTasks,
   deleteTask,
   updateTask,
   handleCompleteTak,

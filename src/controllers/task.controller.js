@@ -80,10 +80,19 @@ async function updateTask(req, res) {
 async function handleCompleteTask(req, res) {
   try {
     const id = req.params.id;
-    const completed = req.body.completed;
-    const updatedTask = taskService.handleCompleteTask(id, req.user._id, {
-      completed: completed,
-    });
+    const updateCompleted = req.body.completed;
+
+    if (typeof updateCompleted !== "boolean") {
+      return res
+        .status(400)
+        .json({ message: "`completed` must be a boolean (true/false)" });
+    }
+
+    const updatedTask = await taskService.handleCompleteTask(
+      id,
+      req.user._id,
+      updateCompleted,
+    );
     res.status(200).json({ message: "Updated Success", task: updatedTask });
   } catch (error) {
     res.status(500).json({ message: "Failed to Update", error: error });
@@ -92,7 +101,7 @@ async function handleCompleteTask(req, res) {
 async function getStats(req, res) {
   try {
     const stats = await taskService.getStats(req.user._id);
-    res.status(200).json({ success: true, data: stats });
+    res.status(200).json({ success: true, stats });
   } catch (error) {
     res
       .status(500)

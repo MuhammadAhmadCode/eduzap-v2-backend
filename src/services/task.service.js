@@ -49,9 +49,16 @@ const getStats = async (userId) => {
     ) || [];
 
   const priority = {
-    high: tasks.filter((t) => t.priority === "high").length || 0,
-    medium: tasks.filter((t) => t.priority === "medium").length || 0,
-    low: tasks.filter((t) => t.priority === "low").length || 0,
+    high: tasks
+      .filter((t) => t.priority === "high")
+      .map((t) => ({
+        id: t._id,
+        priority: t.priority,
+        title: t.title,
+        completed: t.completed,
+      })),
+    medium: tasks.filter((t) => t.priority === "medium"),
+    low: tasks.filter((t) => t.priority === "low"),
   };
 
   const completionRate =

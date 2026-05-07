@@ -16,18 +16,31 @@ const loginValidator = [
 
 const taskValidator = [
   body("title").notEmpty().withMessage("Title is required"),
-  body("deadline").isDate().withMessage("Deadline must be a valid date"),
+  body("deadline")
+    .optional({ checkFalsy: true })
+    .isDate()
+    .withMessage("Deadline must be a valid date"),
   body("completed")
+    .optional()
     .isBoolean()
+    .toBoolean()
     .withMessage("Completed must be a boolean value"),
   body("priority")
+    .default("medium")
     .isIn(["low", "medium", "high"])
     .withMessage("Invalid priority value"),
 ];
 
 const notesValidator = [
-  body("title").isEmpty().withMessage(""),
+  body("title")
+    .notEmpty()
+    .withMessage("title is required")
+    .isString()
+    .trim()
+    .withMessage("Title is required"),
   body("description")
+    .notEmpty()
+    .withMessage("description is required")
     .isLength({ min: 6 })
     .withMessage("Description must be at least 6 chars long."),
 ];

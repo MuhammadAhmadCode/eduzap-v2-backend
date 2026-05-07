@@ -19,6 +19,8 @@ router.patch("/updatetask/:id", authMiddleware, taskController.updateTask);
 router.patch(
   "/updateTaskCompleted/:id",
   authMiddleware,
+  validator.taskValidator,
+  handlevalidation,
   taskController.handleCompleteTask,
 );
 router.get("/stats", authMiddleware, taskController.getStats);

@@ -4,7 +4,7 @@ const createTask = async (taskData, userId) => {
   return await taskModel.create({ ...taskData, user: userId });
 };
 const getTasks = async (userId) => {
-  return await taskModel.find({ user: userId });
+  return await taskModel.find({ user: userId }).sort({ createdAt: -1 });
 };
 const getLatestTasks = async (userId) => {
   return taskModel.aggregate([

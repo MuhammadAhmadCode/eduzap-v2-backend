@@ -14,6 +14,12 @@ router.post(
 );
 router.get("/allnotes", authMiddleware, noteController.getAllNotes);
 router.delete("/deletenote/:id", authMiddleware, noteController.deleteNote);
-router.patch("/updatenote/:id", authMiddleware, noteController.updateNote);
+router.patch(
+  "/updatenote/:id",
+  authMiddleware,
+  validator.notesValidator,
+  handlevalidation,
+  noteController.updateNote,
+);
 
 module.exports = router;

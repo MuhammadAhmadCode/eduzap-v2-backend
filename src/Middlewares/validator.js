@@ -20,12 +20,8 @@ const loginValidator = [
 
 const taskValidator = [
   body("title").notEmpty().withMessage("Title is required"),
-  body("deadline")
-    .optional({ checkFalsy: true })
-    .isDate()
-    .withMessage("Deadline must be a valid date"),
   body("completed")
-    .optional()
+    .default(false)
     .isBoolean()
     .toBoolean()
     .withMessage("Completed must be a boolean value"),
@@ -35,6 +31,13 @@ const taskValidator = [
     .withMessage("Invalid priority value"),
 ];
 
+const toggleTaskValidator = [
+  body("completed")
+    .exists()
+    .withMessage("Completed status is required")
+    .isBoolean()
+    .toBoolean(),
+];
 const notesValidator = [
   body("title")
     .notEmpty()
@@ -54,4 +57,5 @@ module.exports = {
   loginValidator,
   taskValidator,
   notesValidator,
+  toggleTaskValidator,
 };

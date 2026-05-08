@@ -19,7 +19,7 @@ router.patch("/updatetask/:id", authMiddleware, taskController.updateTask);
 router.patch(
   "/updateTaskCompleted/:id",
   authMiddleware,
-  validator.taskValidator,
+  validator.toggleTaskValidator,
   handlevalidation,
   taskController.handleCompleteTask,
 );

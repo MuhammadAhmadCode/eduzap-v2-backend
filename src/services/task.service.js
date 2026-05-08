@@ -89,7 +89,7 @@ const getStats = async (userId) => {
       deadline: task.deadline,
     }));
   const tasksCompletedToday = tasks
-    .filter((t) => t.completed && dayjs(t.completedAt()).isSame(dayjs(), "day"))
+    .filter((t) => t.completed && dayjs(t.completedAt).isSame(dayjs(), "day"))
     .map((task) => ({
       id: task._id,
       priority: task.priority,
@@ -108,11 +108,11 @@ const getStats = async (userId) => {
     priority,
     productivityScore,
     tasksCreatedToday: {
-      count: rawTasksCreatedToday.length || 0,
+      count: tasksCreatedToday.length || 0,
       tasks: tasksCreatedToday,
     },
     tasksCompletedToday: {
-      count: rawtasksCompletedToday.length || 0,
+      count: tasksCompletedToday.length || 0,
       tasks: tasksCompletedToday,
     },
   };

@@ -57,7 +57,10 @@ const getStats = async (userId) => {
   // overdue tasks
   const overdueTasks =
     tasks.filter(
-      (t) => !t.completed && t.deadline && t.deadline < new Date(),
+      (t) =>
+        !t.completed &&
+        t.deadline &&
+        dayjs(t.deadline).isBefore(dayjs(), "day"),
     ) || [];
 
   const priority = {
@@ -77,25 +80,22 @@ const getStats = async (userId) => {
     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
   const score = completionRate - overdueTasks.length * 10;
   const productivityScore = Math.max(0, Math.min(100, score));
-  const startOftheDay = new Date().setHours(0, 0, 0, 0);
-  const rawTasksCreatedToday = tasks.filter(
-    (t) => t.createdAt >= startOftheDay,
-  );
-  const rawtasksCompletedToday = tasks.filter(
-    (t) => t.completed && t.completedAt && t.completedAt >= startOftheDay,
-  );
-  const tasksCreatedToday = rawTasksCreatedToday.map((task) => ({
-    id: task._id,
-    priority: task.priority,
-    title: task.title,
-    deadline: task.deadline,
-  }));
-  const tasksCompletedToday = rawtasksCompletedToday.map((task) => ({
-    id: task._id,
-    priority: task.priority,
-    title: task.title,
-    deadline: task.deadline,
-  }));
+  const tasksCreatedToday = tasks
+    .filter((t) => t.createdAt && dayjs(t.createdAt).isSame(dayjs(), "day"))
+    .map((task) => ({
+      id: task._id,
+      priority: task.priority,
+      title: task.title,
+      deadline: task.deadline,
+    }));
+  const tasksCompletedToday = tasks
+    .filter((t) => t.completed && dayjs(t.completedAt()).isSame(dayjs(), "day"))
+    .map((task) => ({
+      id: task._id,
+      priority: task.priority,
+      title: task.title,
+      deadline: task.deadline,
+    }));
   return {
     totalTasks,
     completedTasks,

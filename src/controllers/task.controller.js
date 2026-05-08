@@ -28,7 +28,8 @@ async function CreateTask(req, res) {
 
 async function getTasks(req, res) {
   try {
-    const tasks = await taskService.getTasks(req.user._id);
+    const { filter } = req.query;
+    const tasks = await taskService.getTasks(req.user._id, filter);
     res.status(200).json({ message: "fetched", tasks: tasks });
   } catch (error) {
     res.status(500).json({ message: "Failed to get tasks", error: error });

@@ -1,9 +1,21 @@
 const taskModel = require("../models/task.model");
-
+const dayjs = require("dayjs");
 const createTask = async (taskData, userId) => {
   return await taskModel.create({ ...taskData, user: userId });
 };
-const getTasks = async (userId) => {
+const getTasks = async (userId, filter) => {
+  if (filter === "today") {
+    const startOfDay = dayjs().startOf("day").toDate();
+    const todayTasks = await taskModel
+      .find({ user: userId, createdAt: { $gte: startOfDay } })
+      .sort({ createdAt: -1 });
+    return todayTasks;
+  } else if (filter === "weekly") {
+    const lastWeek = dayjs().subtract(7, "day").toDate();
+    return await taskModel
+      .find({ user: userId, createdAt: { $gte: lastWeek } })
+      .sort({ createdAt: -1 });
+  }
   return await taskModel.find({ user: userId }).sort({ createdAt: -1 });
 };
 const getLatestTasks = async (userId) => {

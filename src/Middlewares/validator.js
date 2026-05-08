@@ -2,7 +2,11 @@ const { body } = require("express-validator");
 
 // Validation middleware for user registration
 const registerValidator = [
-  body("fullName").notEmpty().withMessage("Full Name is required"),
+  body("fullName")
+    .notEmpty()
+    .withMessage("Full Name is required")
+    .isLength({ min: 3 })
+    .withMessage("Full Name must be at least 3 characters long"),
   body("email").isEmail().withMessage("Please provide a valid email"),
   body("password")
     .isLength({ min: 6 })

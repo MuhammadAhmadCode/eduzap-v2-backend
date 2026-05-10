@@ -10,8 +10,6 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 
-import cors from "cors";
-
 app.use(
   cors({
     origin: "https://eduzap-v2-frontend.vercel.app",

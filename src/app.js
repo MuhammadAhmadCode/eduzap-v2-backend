@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "https://eduzap-v2.vercel.app/",
+    origin: "https://eduzap-v2.vercel.app",
     credentials: true,
   }),
 );

@@ -32,6 +32,7 @@ async function getTasks(req, res) {
     const tasks = await taskService.getTasks(req.user._id, filter);
     res.status(200).json({ message: "fetched", tasks: tasks });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Failed to get tasks", error: error });
   }
 }
